@@ -10,7 +10,7 @@ app.engine('html', require('ejs').renderFile);
 const { models: { User }} = require('./db');
 const path = require('path');
 
-app.get('/', (req, res)=> res.render(path.join(__dirname, 'index.html'), { GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID, FOO: Math.random() }));
+app.get('/', (req, res)=> res.render(path.join(__dirname, 'index.html'), { GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID }));
 //^^ can add client info with foo and show it on the page inside html.js with foo under body
 
 app.get('/api/auth', async(req, res, next)=> {
@@ -24,7 +24,13 @@ app.get('/api/auth', async(req, res, next)=> {
 
 app.get('/github/callback', async(req, res, next)=> {
   try {
+    //code that we are getting back from github
+    // res.send(req.query.code)
+
+    //throws an error 
     const token = await User.authenticate(req.query.code);
+    // res.send(token)
+
     res.send(`
       <html>
        <body>
